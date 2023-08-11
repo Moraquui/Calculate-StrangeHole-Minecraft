@@ -1,90 +1,42 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
-class Program
+
+public class Program
 {
-    static public string GetValue(string Sentence)
-    {
-        while (true)
-        {
-            string String_;
-            Console.Write(Sentence);
-            try
-            {
-                String_ = Console.ReadLine();
-                Console.Clear();
-            }
-            catch (Exception)
-            {
-                Console.Clear();
-                Console.WriteLine("Incorrect!");
-                continue;
-                throw;
-            }
-            return String_;
-            break;
-        }
 
-    }
-    static public int GetIntValue(string Sentence)
-    {
-        try
-        {
-            return Convert.ToInt32(GetValue(Sentence));
-        }
-        catch (Exception)
-        {
-            Console.Clear();
-            Console.WriteLine("Incorrect!");
-            GetIntValue(Sentence);
-        }
-        return 0;
-    }
-    static public double GetDoubleValue(string Sentence)
-    {
-        try
-        {
 
-            return Convert.ToDouble(GetValue(Sentence));
-        }
-        catch (Exception)
-        {
-            Console.Clear();
-            Console.WriteLine("Incorrect!");
+    public static Point CalculateIntersection(Point point1, double angle1, Point point2, double angle2)
+    {
+        // Convert angles to radians
+        double angle1_rad = Math.PI * angle1 / 180.0;
+        double angle2_rad = Math.PI * angle2 / 180.0;
 
-            throw;
-        }
-        GetDoubleValue(Sentence);
+        // Calculate slope of the lines
+        double slope1 = Math.Tan(angle1_rad);
+        double slope2 = Math.Tan(angle2_rad);
+
+        // Calculate y-intercepts
+        double y_intercept1 = point1.Y - slope1 * point1.X;
+        double y_intercept2 = point2.Y - slope2 * point2.X;
+
+        // Calculate x-coordinate of the intersection point
+        double x_intersect = (y_intercept2 - y_intercept1) / (slope1 - slope2);
+
+        // Calculate y-coordinate of the intersection point
+        double y_intersect = slope1 * x_intersect + y_intercept1;
+
+        return new Point((int)x_intersect, (int)y_intersect);
     }
     static void Main(string[] args)
     {
-        //Point FirstPossition = new Point(GetIntValue("First Possition X"), GetIntValue("First Possition Z"));
-        //Point SecondPossition = new Point(GetIntValue("Second Possition X"), GetIntValue("Second Possition Z"));
-        //double SecondAngle = GetDoubleValue("Second Possition Angle");
-        //double FirstAngle = GetDoubleValue("First Possition Angle");
-        Point FirstPossition = new Point(-320, 196);
-        double FirstAngle = 11.24;
-        Point SecondPossition = new Point(-266, 427);
-        double SecondAngle = 35.5;
+        Point firstPosition = new Point(-2258, 433);
+        double firstAngle = 164.8;
+        Point secondPosition = new Point(-2150, 233);
+        double secondAngle = 141.6;
 
-        double FirstWordlAngle = FirstAngle < 0 ? (180 + FirstAngle) + 180 : FirstAngle;
-        
-        double SecondWordlAngle = SecondAngle < 0 ? (180 + SecondAngle) + 180 : SecondAngle;
-        double FirstTriangleAngle = (MathF.Atan((SecondPossition.Y - FirstPossition.Y) / (SecondPossition.X - FirstPossition.X)) * 180) / Math.PI;
-        double FirstTriagAngle = (FirstTriangleAngle - FirstWordlAngle) * ((FirstTriangleAngle - FirstWordlAngle) < 0 ? -1 : 1);
-        double SecondTriagAngle = (SecondWordlAngle - FirstWordlAngle) * ((SecondWordlAngle - FirstWordlAngle) < 0 ? -1 : 1);
-        double ThirdTriagAngle = 180 - SecondTriagAngle - FirstTriangleAngle;
-        double FirstDistance = MathF.Sqrt(MathF.Pow(SecondPossition.X - FirstPossition.X, 2) + MathF.Pow(SecondPossition.Y - FirstPossition.Y, 2));
-        double SecondDistance = FirstDistance * MathF.Sin((float)SecondTriagAngle) / MathF.Sin((float)ThirdTriagAngle);
-        double ThirdDistance = FirstDistance * MathF.Sin((float)FirstTriagAngle) / MathF.Cos((float)ThirdTriagAngle);
+        Point intersectionPoint = CalculateIntersection(firstPosition, firstAngle, secondPosition, secondAngle);
 
-        Console.WriteLine(FirstPossition.X + (MathF.Sin((float)FirstAngle)) * SecondDistance);
-        Console.WriteLine(FirstPossition.Y + (MathF.Cos((float)FirstAngle)) * SecondDistance);
-
-
-
-
-
+        Console.WriteLine($"Intersection Point: ({intersectionPoint.X}, {intersectionPoint.Y})");
     }
 }
-
-
